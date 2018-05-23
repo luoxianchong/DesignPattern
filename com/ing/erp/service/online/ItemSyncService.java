@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.ing.erp.service.online.handler.SyncInventory;
 import com.ing.erp.service.online.platform.JD;
 import com.ing.erp.service.online.platform.PinDD;
 import com.ing.erp.service.online.platform.TaoBao;
@@ -36,14 +37,15 @@ import com.ing.erp.service.online.pojo.Token;
  *
  */
 public class ItemSyncService {
-	
+
+	 private SyncInventory syncInventory;
 	
 	//模拟客户端入口
 	public void uploadInv2Platform(int shopType,String ShopUid,Collection<ItemInventory> itemInvList){
 		TradePlatform pf=platFormInstance(shopType);
-		Token token=getToken(shopType, ShopUid);
-		pf.setToken(token);
-		pf.syncInventoryToPlatform(itemInvList);
+		pf.setToken(getToken(shopType, ShopUid));
+		syncInventory.setPlatform(pf);
+		syncInventory.syncTo(itemInvList);
 	}
 	
 	public TradePlatform platFormInstance(int shopType){
